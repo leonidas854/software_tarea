@@ -119,13 +119,18 @@ func logoutHandler(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(map[string]string{"message": "Logged out"})
 }
 
-func main() {
+func SetupRouter() *http.ServeMux {
 	mux := http.NewServeMux()
 	
 	mux.HandleFunc("/api/login", enableCORS(loginHandler))
 	mux.HandleFunc("/api/logout", enableCORS(logoutHandler))
 	mux.HandleFunc("/api/cart", enableCORS(authMiddleware(cartHandler)))
+	
+	return mux
+}
 
+func main() {
+	mux := SetupRouter()
 	log.Println("Backend server running on http://localhost:8080")
 	log.Fatal(http.ListenAndServe(":8080", mux))
 }

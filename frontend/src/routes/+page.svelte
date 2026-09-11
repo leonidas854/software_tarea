@@ -1,10 +1,10 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
 
-	let username = '';
-	let password = '';
-	let error = '';
-	let loading = false;
+	let username = $state('');
+	let password = $state('');
+	let error = $state('');
+	let loading = $state(false);
 
 	async function handleLogin() {
 		// Client-side validation (JS)

@@ -9,16 +9,16 @@
 		quantity: number;
 	}
 
-	let cartItems: Product[] = [];
-	let subtotal: number = 0;
-	let error = '';
+	let cartItems = $state<Product[]>([]);
+	let subtotal = $state(0);
+	let error = $state('');
 	
 	// Form inputs
-	let prodId = '';
-	let prodName = '';
-	let prodPrice = '';
-	let prodQuantity = 1;
-	let loading = false;
+	let prodId = $state('');
+	let prodName = $state('');
+	let prodPrice = $state('');
+	let prodQuantity = $state(1);
+	let loading = $state(false);
 
 	async function fetchCart() {
 		try {

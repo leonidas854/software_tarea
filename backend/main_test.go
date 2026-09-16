@@ -54,9 +54,9 @@ func TestIntegration(t *testing.T) {
 	})
 
 	t.Run("Agregar Producto y Ver Carrito", func(t *testing.T) {
-		// Agregar producto
-		prod := map[string]interface{}{"id": "P01", "name": "Test Item", "price": 100.0, "quantity": 2}
-		body, _ := json.Marshal(prod)
+		// AGREGAR_PRODUCTO: send only product_id and quantity (price comes from catalog)
+		addReq := map[string]interface{}{"product_id": "TAZA-001", "quantity": 2}
+		body, _ := json.Marshal(addReq)
 		
 		req, _ := http.NewRequest(http.MethodPost, server.URL+"/api/cart", bytes.NewBuffer(body))
 		req.AddCookie(sessionCookie)
@@ -72,7 +72,7 @@ func TestIntegration(t *testing.T) {
 			t.Errorf("Esperado 200 OK, obtenido %d", resp.StatusCode)
 		}
 
-		// Ver carrito
+		// VER_CARRITO
 		reqGet, _ := http.NewRequest(http.MethodGet, server.URL+"/api/cart", nil)
 		reqGet.AddCookie(sessionCookie)
 		
@@ -89,9 +89,11 @@ func TestIntegration(t *testing.T) {
 		var result map[string]interface{}
 		json.NewDecoder(respGet.Body).Decode(&result)
 		
+		// TAZA-001 costs $24.00, quantity 2 => subtotal = 48.00
 		subtotal, ok := result["subtotal"].(float64)
-		if !ok || subtotal != 200.0 {
-			t.Errorf("Esperado subtotal 200.0, obtenido %v", result["subtotal"])
+		expectedSubtotal := 24.00 * 2
+		if !ok || subtotal != expectedSubtotal {
+			t.Errorf("Esperado subtotal %.2f, obtenido %v", expectedSubtotal, result["subtotal"])
 		}
 	})
 	

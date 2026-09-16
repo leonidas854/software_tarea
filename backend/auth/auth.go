@@ -41,6 +41,13 @@ func IsValidSession(sessionID string) bool {
 	return true
 }
 
+// InvalidateSession removes a session from the server store.
+func InvalidateSession(sessionID string) {
+	mu.Lock()
+	delete(sessions, sessionID)
+	mu.Unlock()
+}
+
 func generateSessionID() string {
 	// Simple UUID mock for this exercise
 	return "session-" + time.Now().Format("20060102150405.000")
